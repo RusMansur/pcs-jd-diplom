@@ -11,10 +11,10 @@ public class Main {
 
 	public static void main(String[] args) throws Exception {
 		int port = 8989;
-		while (true) {
-			ServerSocket serverSocket = new ServerSocket(port);
+		ServerSocket serverSocket = new ServerSocket(port);
+		boolean runServer = true;
+		while (runServer) {
 			Socket connection = serverSocket.accept();
-
 			DataOutputStream out = new DataOutputStream(connection.getOutputStream());
 			DataInputStream in = new DataInputStream(connection.getInputStream());
 
@@ -31,7 +31,7 @@ public class Main {
 			in.close();
 			out.close();
 			connection.close();
-			serverSocket.close();
 		}
+		serverSocket.close();
 	}
 }
