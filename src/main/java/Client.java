@@ -9,10 +9,9 @@ public class Client {
 
 		try (Socket clientSocket = new Socket(host, port)) {
 			BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-			PrintWriter out = new PrintWriter(clientSocket.getOutputStream());
+			PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 
 			out.println("бизнес");
-			out.flush();
 			boolean readAnswer = true;
 			while (readAnswer) {
 				String response = in.readLine();

@@ -16,7 +16,7 @@ public class Main {
 		while (runServer) {
 			Socket connection = serverSocket.accept();
 			BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-			PrintWriter out = new PrintWriter(connection.getOutputStream());
+			PrintWriter out = new PrintWriter(connection.getOutputStream(),true);
 
 			String word = in.readLine();
 			BooleanSearchEngine engine = new BooleanSearchEngine(new File(PATH));
@@ -25,10 +25,8 @@ public class Main {
 				GsonBuilder gsonBuilder = new GsonBuilder();
 				Gson gson = gsonBuilder.setPrettyPrinting().create();
 				out.println(gson.toJson(pageEntry));
-				out.flush();
 			}
 			out.println("end");
-			out.flush();
 		}
 		serverSocket.close();
 	}
