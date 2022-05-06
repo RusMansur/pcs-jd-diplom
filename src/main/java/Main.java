@@ -15,22 +15,20 @@ public class Main {
 		boolean runServer = true;
 		while (runServer) {
 			Socket connection = serverSocket.accept();
-			DataOutputStream out = new DataOutputStream(connection.getOutputStream());
-			DataInputStream in = new DataInputStream(connection.getInputStream());
+			BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			PrintWriter out = new PrintWriter(connection.getOutputStream());
 
-			String word = in.readUTF();
+			String word = in.readLine();
 			BooleanSearchEngine engine = new BooleanSearchEngine(new File(PATH));
 			List<PageEntry> pageEntryList = engine.search(word);
 			for (PageEntry pageEntry : pageEntryList) {
 				GsonBuilder gsonBuilder = new GsonBuilder();
 				Gson gson = gsonBuilder.setPrettyPrinting().create();
-				out.writeUTF(gson.toJson(pageEntry));
+				out.println(gson.toJson(pageEntry));
+				out.flush();
 			}
-			out.writeUTF("end");
+			out.println("end");
 			out.flush();
-			in.close();
-			out.close();
-			connection.close();
 		}
 		serverSocket.close();
 	}

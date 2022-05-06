@@ -1,28 +1,29 @@
 import java.io.*;
 import java.net.Socket;
-import java.util.Scanner;
 
 public class Client {
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) {
 		String host = "localhost";
 		int port = 8989;
 
-		Socket clientSocket = new Socket(host, port);
-		DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
-		DataInputStream in = new DataInputStream(clientSocket.getInputStream());
+		try (Socket clientSocket = new Socket(host, port)) {
+			BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+			PrintWriter out = new PrintWriter(clientSocket.getOutputStream());
 
-		out.writeUTF("развитие");
-
-		boolean readAnswer = true;
-		while (readAnswer) {
-			String response = in.readUTF();
-			if (response.equals("end")) {
-				readAnswer = false;
-				continue;
+			out.println("бизнес");
+			out.flush();
+			boolean readAnswer = true;
+			while (readAnswer) {
+				String response = in.readLine();
+				if (response.equals("end")) {
+					readAnswer = false;
+					continue;
+				}
+				System.out.println(response);
 			}
-			System.out.println(response);
+		} catch (IOException exception) {
+			exception.printStackTrace();
 		}
-
 	}
 }
