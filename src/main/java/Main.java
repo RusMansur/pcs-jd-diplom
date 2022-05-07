@@ -9,25 +9,27 @@ import java.util.List;
 public class Main {
 	public static final String PATH = "/Users/rusimac/Documents/IdeaProjects/pcs-jd-diplom/pdfs";
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 		int port = 8989;
-		ServerSocket serverSocket = new ServerSocket(port);
-		boolean runServer = true;
-		while (runServer) {
-			Socket connection = serverSocket.accept();
-			BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-			PrintWriter out = new PrintWriter(connection.getOutputStream(),true);
+		try (ServerSocket serverSocket = new ServerSocket(port)) {
+			boolean runServer = true;
+			while (runServer) {
+				Socket connection = serverSocket.accept();
+				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+				PrintWriter out = new PrintWriter(connection.getOutputStream(), true);
 
-			String word = in.readLine();
-			BooleanSearchEngine engine = new BooleanSearchEngine(new File(PATH));
-			List<PageEntry> pageEntryList = engine.search(word);
-			for (PageEntry pageEntry : pageEntryList) {
-				GsonBuilder gsonBuilder = new GsonBuilder();
-				Gson gson = gsonBuilder.setPrettyPrinting().create();
-				out.println(gson.toJson(pageEntry));
+				String word = in.readLine();
+				BooleanSearchEngine engine = new BooleanSearchEngine(new File(PATH));
+				List<PageEntry> pageEntryList = engine.search(word);
+				for (PageEntry pageEntry : pageEntryList) {
+					GsonBuilder gsonBuilder = new GsonBuilder();
+					Gson gson = gsonBuilder.setPrettyPrinting().create();
+					out.println(gson.toJson(pageEntry));
+				}
+				out.println("end");
 			}
-			out.println("end");
+		} catch (IOException exception) {
+			exception.printStackTrace();
 		}
-		serverSocket.close();
 	}
 }
