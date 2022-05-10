@@ -14,19 +14,22 @@ public class Main {
 		try (ServerSocket serverSocket = new ServerSocket(port)) {
 			boolean runServer = true;
 			while (runServer) {
-				Socket connection = serverSocket.accept();
-				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-				PrintWriter out = new PrintWriter(connection.getOutputStream(), true);
+				try (Socket connection = serverSocket.accept();
+					 BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+					 PrintWriter out = new PrintWriter(connection.getOutputStream(), true)) {
 
-				String word = in.readLine();
-				BooleanSearchEngine engine = new BooleanSearchEngine(new File(PATH));
-				List<PageEntry> pageEntryList = engine.search(word);
-				for (PageEntry pageEntry : pageEntryList) {
-					GsonBuilder gsonBuilder = new GsonBuilder();
-					Gson gson = gsonBuilder.setPrettyPrinting().create();
-					out.println(gson.toJson(pageEntry));
+					String word = in.readLine();
+					BooleanSearchEngine engine = new BooleanSearchEngine(new File(PATH));
+					List<PageEntry> pageEntryList = engine.search(word);
+					for (PageEntry pageEntry : pageEntryList) {
+						GsonBuilder gsonBuilder = new GsonBuilder();
+						Gson gson = gsonBuilder.setPrettyPrinting().create();
+						out.println(gson.toJson(pageEntry));
+					}
+					out.println("end");
+				} catch (IOException exception) {
+					exception.printStackTrace();
 				}
-				out.println("end");
 			}
 		} catch (IOException exception) {
 			exception.printStackTrace();
