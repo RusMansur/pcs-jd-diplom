@@ -22,8 +22,7 @@ public class Main {
 					BooleanSearchEngine engine = new BooleanSearchEngine(new File(PATH));
 					List<PageEntry> pageEntryList = engine.search(word);
 
-					Type type = new TypeToken<List<PageEntry>>() {
-					}.getType();
+					Type type = new TypeToken<List<PageEntry>>() {}.getType();
 					Gson gson = new GsonBuilder().create();
 					out.println(gson.toJson(pageEntryList, type));
 				} catch (IOException exception) {
