@@ -9,8 +9,7 @@ import java.net.Socket;
 import java.util.List;
 
 public class Main {
-	public static final String PATH = "/Users/rusimac/Documents/IdeaProjects/pcs-jd-diplom/pdfs";
-
+	final static String PATH = "pdfs";
 	public static void main(String[] args) {
 		int port = 8989;
 		try (ServerSocket serverSocket = new ServerSocket(port)) {
@@ -23,7 +22,8 @@ public class Main {
 					BooleanSearchEngine engine = new BooleanSearchEngine(new File(PATH));
 					List<PageEntry> pageEntryList = engine.search(word);
 
-					Type type = new TypeToken<List<PageEntry>>() {}.getType();
+					Type type = new TypeToken<List<PageEntry>>() {
+					}.getType();
 					Gson gson = new GsonBuilder().create();
 					out.println(gson.toJson(pageEntryList, type));
 				} catch (IOException exception) {
